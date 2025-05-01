@@ -17,36 +17,35 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.ViewHolder
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView text;
+        TextView name, position, age, goals, assists, nationality;
 
         public ViewHolder(View view) {
             super(view);
-            text = view.findViewById(android.R.id.text1);
+            name = view.findViewById(R.id.name);
+            position = view.findViewById(R.id.position);
+            age = view.findViewById(R.id.age);
+            goals = view.findViewById(R.id.goals);
+            assists = view.findViewById(R.id.assists);
+            nationality = view.findViewById(R.id.nationality);
         }
     }
 
     @Override
     public PlayerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(android.R.layout.simple_list_item_1, parent, false);
+                .inflate(R.layout.player_row, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(PlayerAdapter.ViewHolder holder, int position) {
         Player p = players.get(position);
-        String playerDetails = String.format(
-                "Name: %s\nPosition: %s\nAge: %d\nGoals: %d\nAssists: %d\nAppearances: %d\nNationality: %s\nTeam ID: %d",
-                p.name,
-                p.position,
-                p.age,
-                p.goals,
-                p.assists,
-                p.appearances,
-                p.nationality,
-                p.teamId
-        );
-        holder.text.setText(playerDetails);
+        holder.name.setText(p.name);
+        holder.position.setText(p.position);
+        holder.age.setText(String.valueOf(p.age));
+        holder.goals.setText(String.valueOf(p.goals));
+        holder.assists.setText(String.valueOf(p.assists));
+        holder.nationality.setText(p.nationality);
     }
 
     @Override
