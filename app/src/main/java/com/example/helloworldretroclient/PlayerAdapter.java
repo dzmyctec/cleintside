@@ -41,11 +41,11 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.ViewHolder
     public void onBindViewHolder(PlayerAdapter.ViewHolder holder, int position) {
         Player p = players.get(position);
         holder.name.setText(p.name);
-        holder.position.setText(p.position);
+        holder.position.setText(p.position != null ? p.position : "N/A");
         holder.age.setText(String.valueOf(p.age));
         holder.goals.setText(String.valueOf(p.goals));
         holder.assists.setText(String.valueOf(p.assists));
-        holder.nationality.setText(p.nationality);
+        holder.nationality.setText(p.nationality != null ? p.nationality : "Unknown");
     }
 
     @Override

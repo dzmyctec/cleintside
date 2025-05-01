@@ -8,10 +8,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
     private Button backButton, createTeamButton;
     private TextView currentTeamName;
     private View mainLayout, createTeamLayout, createPlayerLayout;
+    private FrameLayout formContainer;
     
     // API
     private PlayerApiService apiService;
@@ -51,6 +54,10 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Set up toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         setupViews();
         setupRetrofit();
         setupListeners();
@@ -59,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
     private void setupViews() {
         // Find views in main layout
         mainLayout = findViewById(R.id.mainLayout);
+        formContainer = findViewById(R.id.formContainer);
         inputName = findViewById(R.id.inputName);
         inputMinAge = findViewById(R.id.inputMinAge);
         inputPosition = findViewById(R.id.inputPosition);
@@ -150,14 +158,15 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
         // Set flag
         isCreatingTeam = true;
         
-        // Hide main layout components
-        setMainContentVisibility(View.GONE);
-        
-        // Add create team form to the main view
+        // Add create team form to the form container
+        formContainer.removeAllViews(); // Clear any existing views
         if (createTeamLayout.getParent() != null) {
             ((ViewGroup) createTeamLayout.getParent()).removeView(createTeamLayout);
         }
-        ((ViewGroup) findViewById(android.R.id.content)).addView(createTeamLayout);
+        formContainer.addView(createTeamLayout);
+        
+        // Show the form container (which overlays the main content)
+        formContainer.setVisibility(View.VISIBLE);
     }
     
     private void showCreatePlayerForm(Team team) {
@@ -169,14 +178,15 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
         TextView playerTeamName = createPlayerLayout.findViewById(R.id.playerTeamName);
         playerTeamName.setText("Team: " + team.name);
         
-        // Hide main layout components
-        setMainContentVisibility(View.GONE);
-        
-        // Add create player form to the main view
+        // Add create player form to the form container
+        formContainer.removeAllViews(); // Clear any existing views
         if (createPlayerLayout.getParent() != null) {
             ((ViewGroup) createPlayerLayout.getParent()).removeView(createPlayerLayout);
         }
-        ((ViewGroup) findViewById(android.R.id.content)).addView(createPlayerLayout);
+        formContainer.addView(createPlayerLayout);
+        
+        // Show the form container (which overlays the main content)
+        formContainer.setVisibility(View.VISIBLE);
     }
     
     private void saveNewTeam() {
@@ -247,11 +257,9 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
     }
     
     private void cancelTeamCreation() {
-        // Remove form from view
-        ((ViewGroup) findViewById(android.R.id.content)).removeView(createTeamLayout);
-        
-        // Show main layout again
-        setMainContentVisibility(View.VISIBLE);
+        // Hide the form container
+        formContainer.setVisibility(View.GONE);
+        formContainer.removeAllViews();
         
         // Reset state
         isCreatingTeam = false;
@@ -346,11 +354,9 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
     }
     
     private void cancelPlayerCreation() {
-        // Remove form from view
-        ((ViewGroup) findViewById(android.R.id.content)).removeView(createPlayerLayout);
-        
-        // Show main layout again
-        setMainContentVisibility(View.VISIBLE);
+        // Hide the form container
+        formContainer.setVisibility(View.GONE);
+        formContainer.removeAllViews();
         
         // Reset state
         isCreatingPlayer = false;
@@ -362,6 +368,8 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
     }
     
     private void setMainContentVisibility(int visibility) {
+        // This method is now only used for toggling visibility of elements within the main content
+        // Forms are handled using the form container overlay
         findViewById(R.id.inputName).setVisibility(visibility);
         findViewById(R.id.inputMinAge).setVisibility(visibility);
         findViewById(R.id.inputPosition).setVisibility(visibility);
@@ -389,6 +397,9 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
             currentTeamName.setVisibility(View.GONE);
             isViewingPlayers = false;
             
+            // Hide search results header
+            findViewById(R.id.searchResultsHeader).setVisibility(View.GONE);
+            
             // Show the search inputs and buttons
             inputName.setVisibility(View.VISIBLE);
             inputMinAge.setVisibility(View.VISIBLE);
@@ -412,6 +423,9 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
 
     private void displayTeamPlayers(Team team) {
         selectedTeam = team;
+        
+        // Hide search results header
+        findViewById(R.id.searchResultsHeader).setVisibility(View.GONE);
         
         if (team.players != null && !team.players.isEmpty()) {
             recyclerView.setAdapter(new PlayerAdapter(team.players));
@@ -450,6 +464,10 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
             params.put("position", inputPosition.getText().toString());
         }
 
+        // Show the search results header
+        TextView searchResultsHeader = findViewById(R.id.searchResultsHeader);
+        searchResultsHeader.setVisibility(View.VISIBLE);
+
         apiService.searchPlayers(params).enqueue(new Callback<List<Player>>() {
             @Override
             public void onResponse(Call<List<Player>> call, Response<List<Player>> response) {
@@ -457,17 +475,22 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
                     recyclerView.setAdapter(new PlayerAdapter(response.body()));
                 } else {
                     Log.e("API", "Search failed: " + response.message());
+                    Toast.makeText(MainActivity.this, "Search failed: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Player>> call, Throwable t) {
                 Log.e("API", "Error: " + t.getMessage());
+                Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
     
     private void fetchTeams() {
+        // Hide search results header
+        findViewById(R.id.searchResultsHeader).setVisibility(View.GONE);
+        
         apiService.getTeams().enqueue(new Callback<List<Team>>() {
             @Override
             public void onResponse(Call<List<Team>> call, Response<List<Team>> response) {
@@ -478,12 +501,14 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
                     recyclerView.setAdapter(adapter);
                 } else {
                     Log.e("API", "Team fetch failed: " + response.message());
+                    Toast.makeText(MainActivity.this, "Failed to fetch teams: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Team>> call, Throwable t) {
                 Log.e("API", "Error fetching teams: " + t.getMessage());
+                Toast.makeText(MainActivity.this, "Error fetching teams: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
