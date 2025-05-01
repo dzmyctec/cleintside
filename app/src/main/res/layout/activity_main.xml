@@ -5,6 +5,31 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- Back button & Team name for player view -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back to Teams"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/currentTeamName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginStart="16dp"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone" />
+    </LinearLayout>
+
     <EditText
         android:id="@+id/inputName"
         android:hint="Name"
@@ -35,6 +60,13 @@
         android:minHeight="48dp"
         android:layout_marginTop="8dp" />
 
+    <Button
+        android:id="@+id/getTeamsButton"
+        android:text="Get Team Data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:layout_marginTop="8dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -45,3 +77,4 @@
         android:contentDescription="List of search results"/>
 
 </LinearLayout>
+

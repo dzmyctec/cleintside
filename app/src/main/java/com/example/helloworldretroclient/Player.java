@@ -10,5 +10,4 @@ public class Player {
     public int appearances;
     public String nationality;
     public int teamId;
-    public Team team;
 }

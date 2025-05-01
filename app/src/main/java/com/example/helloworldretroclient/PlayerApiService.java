@@ -1,10 +1,12 @@
 package com.example.helloworldretroclient;
 
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 public interface PlayerApiService {
 
@@ -22,4 +24,12 @@ public interface PlayerApiService {
             @Query("minGoals") Integer minGoals,
             @Query("minAssists") Integer minAssists
     );
+    
+    // Overloaded method that accepts a map of query parameters
+    @GET("/api/Players/search")
+    Call<List<Player>> searchPlayers(@QueryMap Map<String, String> options);
+    
+    // Endpoint for fetching all teams
+    @GET("/api/Teams")
+    Call<List<Team>> getTeams();
 }
