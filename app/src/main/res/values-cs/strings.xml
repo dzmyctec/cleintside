@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App name and main titles -->
+    <string name="app_name">Fotbalový API Klient</string>
+    <string name="call_button_text">Volat API</string>
+    <string name="app_title">Fotbalový API Klient</string>
+    <string name="featured_title">Průzkumník fotbalových dat</string>
+    <string name="featured_description">Vyhledávejte hráče nebo procházejte informace o týmech pomocí naší komplexní fotbalové databáze.</string>
+    
+    <!-- Search section -->
+    <string name="player_search">Vyhledávání hráčů</string>
+    <string name="input_name">Jméno</string>
+    <string name="input_min_age">Minimální věk</string>
+    <string name="input_position">Pozice</string>
+    <string name="search_button">Vyhledat data hráčů</string>
+    <string name="search_results_header">Výsledky vyhledávání hráčů</string>
+    
+    <!-- Quick actions -->
+    <string name="quick_actions">Rychlé akce</string>
+    <string name="view_teams">Zobrazit týmy</string>
+    <string name="create_team">Vytvořit tým</string>
+    <string name="back_to_teams">Zpět na týmy</string>
+    
+    <!-- Team players -->
+    <string name="team_players">Hráči týmu %1$s</string>
+    <string name="no_players">Žádní hráči nejsou k dispozici pro tým %1$s</string>
+    
+    <!-- Create team form -->
+    <string name="create_new_team">Vytvořit nový tým</string>
+    <string name="team_name">Název týmu</string>
+    <string name="team_league">Liga</string>
+    <string name="team_country">Země</string>
+    <string name="team_founded_year">Rok založení (1800-2024)</string>
+    <string name="team_stadium">Stadion</string>
+    <string name="team_manager">Manažer</string>
+    <string name="cancel">Zrušit</string>
+    <string name="save_team">Uložit tým</string>
+    <string name="team_name_validation">Název týmu musí mít alespoň 2 znaky</string>
+    <string name="team_year_validation">Rok založení musí být mezi 1800 a 2024</string>
+    <string name="valid_year_validation">Zadejte prosím platný rok</string>
+    <string name="team_created">Tým byl úspěšně vytvořen!</string>
+    <string name="team_creation_failed">Vytvoření týmu se nezdařilo: %1$s</string>
+    
+    <!-- Create player form -->
+    <string name="add_new_player">Přidat nového hráče</string>
+    <string name="player_team_name">Tým: %1$s</string>
+    <string name="player_name">Jméno hráče</string>
+    <string name="player_age">Věk (16-50)</string>
+    <string name="player_position">Pozice</string>
+    <string name="player_goals">Góly</string>
+    <string name="player_assists">Asistence</string>
+    <string name="player_appearances">Zápasy</string>
+    <string name="player_nationality">Národnost</string>
+    <string name="save_player">Uložit hráče</string>
+    <string name="no_team_selected">Není vybrán žádný tým</string>
+    <string name="player_name_validation">Jméno hráče musí mít alespoň 2 znaky</string>
+    <string name="player_age_validation">Věk musí být mezi 16 a 50 lety</string>
+    <string name="player_number_validation">Zadejte platné hodnoty pro věk, góly, asistence a počet zápasů</string>
+    <string name="player_added">Hráč byl úspěšně přidán!</string>
+    <string name="player_add_failed">Přidání hráče se nezdařilo: %1$s</string>
+    
+    <!-- Error messages -->
+    <string name="search_failed">Vyhledávání se nezdařilo: %1$s</string>
+    <string name="error_message">Chyba: %1$s</string>
+    <string name="team_fetch_failed">Načtení týmů se nezdařilo: %1$s</string>
+</resources> 
