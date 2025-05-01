@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
         
         // Update team name in the form
         TextView playerTeamName = createPlayerLayout.findViewById(R.id.playerTeamName);
-        playerTeamName.setText("Team: " + team.name);
+        playerTeamName.setText(getString(R.string.player_team_name, team.name));
         
         // Add create player form to the form container
         formContainer.removeAllViews(); // Clear any existing views
@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
         String manager = teamManagerInput.getText().toString().trim();
         
         if (name.isEmpty() || name.length() < 2) {
-            Toast.makeText(this, "Team name must be at least 2 characters", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.team_name_validation, Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -214,11 +214,11 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
         try {
             foundedYear = Integer.parseInt(teamFoundedYearInput.getText().toString().trim());
             if (foundedYear < 1800 || foundedYear > 2024) {
-                Toast.makeText(this, "Founded year must be between 1800 and 2024", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.team_year_validation, Toast.LENGTH_SHORT).show();
                 return;
             }
         } catch (NumberFormatException e) {
-            Toast.makeText(this, "Please enter a valid year", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.valid_year_validation, Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
             @Override
             public void onResponse(Call<Team> call, Response<Team> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(MainActivity.this, "Team created successfully!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, R.string.team_created, Toast.LENGTH_SHORT).show();
                     
                     // Hide form and show main layout
                     cancelTeamCreation();
@@ -245,13 +245,17 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
                     // Refresh team list
                     fetchTeams();
                 } else {
-                    Toast.makeText(MainActivity.this, "Failed to create team: " + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, 
+                        getString(R.string.team_creation_failed, response.message()), 
+                        Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Team> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, 
+                    getString(R.string.error_message, t.getMessage()), 
+                    Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -267,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
     
     private void saveNewPlayer() {
         if (selectedTeam == null) {
-            Toast.makeText(this, "No team selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.no_team_selected, Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -286,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
         String nationality = playerNationalityInput.getText().toString().trim();
         
         if (name.isEmpty() || name.length() < 2) {
-            Toast.makeText(this, "Player name must be at least 2 characters", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.player_name_validation, Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -295,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
         try {
             age = Integer.parseInt(playerAgeInput.getText().toString().trim());
             if (age < 16 || age > 50) {
-                Toast.makeText(this, "Age must be between 16 and 50", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.player_age_validation, Toast.LENGTH_SHORT).show();
                 return;
             }
             
@@ -306,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
             appearances = playerAppearancesInput.getText().toString().isEmpty() ? 0 : 
                 Integer.parseInt(playerAppearancesInput.getText().toString().trim());
         } catch (NumberFormatException e) {
-            Toast.makeText(this, "Please enter valid numbers for age, goals, assists, and appearances", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.player_number_validation, Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -326,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
             @Override
             public void onResponse(Call<Player> call, Response<Player> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(MainActivity.this, "Player added successfully!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, R.string.player_added, Toast.LENGTH_SHORT).show();
                     
                     // Hide form and show player list
                     cancelPlayerCreation();
@@ -342,13 +346,17 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
                         }
                     }
                 } else {
-                    Toast.makeText(MainActivity.this, "Failed to add player: " + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, 
+                        getString(R.string.player_add_failed, response.message()), 
+                        Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Player> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, 
+                    getString(R.string.error_message, t.getMessage()), 
+                    Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -433,7 +441,7 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
             // Show back button and team name
             backButton.setVisibility(View.VISIBLE);
             currentTeamName.setVisibility(View.VISIBLE);
-            currentTeamName.setText(team.name + " Players");
+            currentTeamName.setText(getString(R.string.team_players, team.name));
             isViewingPlayers = true;
             
             // Hide the search inputs and buttons
@@ -446,7 +454,7 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
         } else {
             // Show a message that team has no players
             Toast.makeText(this, 
-                "No players available for " + team.name, 
+                getString(R.string.no_players, team.name), 
                 Toast.LENGTH_SHORT).show();
         }
     }
@@ -475,14 +483,18 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
                     recyclerView.setAdapter(new PlayerAdapter(response.body()));
                 } else {
                     Log.e("API", "Search failed: " + response.message());
-                    Toast.makeText(MainActivity.this, "Search failed: " + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, 
+                        getString(R.string.search_failed, response.message()), 
+                        Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Player>> call, Throwable t) {
                 Log.e("API", "Error: " + t.getMessage());
-                Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, 
+                    getString(R.string.error_message, t.getMessage()), 
+                    Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -501,14 +513,18 @@ public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPla
                     recyclerView.setAdapter(adapter);
                 } else {
                     Log.e("API", "Team fetch failed: " + response.message());
-                    Toast.makeText(MainActivity.this, "Failed to fetch teams: " + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, 
+                        getString(R.string.team_fetch_failed, response.message()), 
+                        Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Team>> call, Throwable t) {
                 Log.e("API", "Error fetching teams: " + t.getMessage());
-                Toast.makeText(MainActivity.this, "Error fetching teams: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, 
+                    getString(R.string.error_message, t.getMessage()), 
+                    Toast.LENGTH_SHORT).show();
             }
         });
     }

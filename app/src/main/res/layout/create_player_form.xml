@@ -12,7 +12,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add New Player"
+            android:text="@string/add_new_player"
             android:textSize="22sp"
             android:textStyle="bold"
             android:gravity="center"
@@ -22,7 +22,7 @@
             android:id="@+id/playerTeamName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Team: Team Name"
+            android:text="@string/player_team_name"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginBottom="16dp" />
@@ -31,7 +31,7 @@
             android:id="@+id/playerNameInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Player Name"
+            android:hint="@string/player_name"
             android:inputType="text"
             android:minHeight="48dp"
             android:layout_marginBottom="8dp" />
@@ -40,7 +40,7 @@
             android:id="@+id/playerAgeInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Age (16-50)"
+            android:hint="@string/player_age"
             android:inputType="number"
             android:minHeight="48dp"
             android:layout_marginBottom="8dp" />
@@ -49,7 +49,7 @@
             android:id="@+id/playerPositionInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Position"
+            android:hint="@string/player_position"
             android:inputType="text"
             android:minHeight="48dp"
             android:layout_marginBottom="8dp" />
@@ -58,7 +58,7 @@
             android:id="@+id/playerGoalsInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Goals"
+            android:hint="@string/player_goals"
             android:inputType="number"
             android:minHeight="48dp"
             android:layout_marginBottom="8dp" />
@@ -67,7 +67,7 @@
             android:id="@+id/playerAssistsInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Assists"
+            android:hint="@string/player_assists"
             android:inputType="number"
             android:minHeight="48dp"
             android:layout_marginBottom="8dp" />
@@ -76,7 +76,7 @@
             android:id="@+id/playerAppearancesInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Appearances"
+            android:hint="@string/player_appearances"
             android:inputType="number"
             android:minHeight="48dp"
             android:layout_marginBottom="8dp" />
@@ -85,7 +85,7 @@
             android:id="@+id/playerNationalityInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nationality"
+            android:hint="@string/player_nationality"
             android:inputType="text"
             android:minHeight="48dp"
             android:layout_marginBottom="16dp" />
@@ -100,7 +100,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Cancel"
+                android:text="@string/cancel"
                 android:layout_marginEnd="8dp" />
 
             <Button
@@ -108,7 +108,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Save Player"
+                android:text="@string/save_player"
                 android:layout_marginStart="8dp" />
         </LinearLayout>
     </LinearLayout>

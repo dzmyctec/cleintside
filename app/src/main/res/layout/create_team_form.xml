@@ -12,7 +12,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Create New Team"
+            android:text="@string/create_new_team"
             android:textSize="22sp"
             android:textStyle="bold"
             android:gravity="center"
@@ -22,7 +22,7 @@
             android:id="@+id/teamNameInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Team Name"
+            android:hint="@string/team_name"
             android:inputType="text"
             android:minHeight="48dp"
             android:layout_marginBottom="8dp" />
@@ -31,7 +31,7 @@
             android:id="@+id/teamLeagueInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="League"
+            android:hint="@string/team_league"
             android:inputType="text"
             android:minHeight="48dp"
             android:layout_marginBottom="8dp" />
@@ -40,7 +40,7 @@
             android:id="@+id/teamCountryInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Country"
+            android:hint="@string/team_country"
             android:inputType="text"
             android:minHeight="48dp"
             android:layout_marginBottom="8dp" />
@@ -49,7 +49,7 @@
             android:id="@+id/teamFoundedYearInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Founded Year (1800-2024)"
+            android:hint="@string/team_founded_year"
             android:inputType="number"
             android:minHeight="48dp"
             android:layout_marginBottom="8dp" />
@@ -58,7 +58,7 @@
             android:id="@+id/teamStadiumInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Stadium"
+            android:hint="@string/team_stadium"
             android:inputType="text"
             android:minHeight="48dp"
             android:layout_marginBottom="8dp" />
@@ -67,7 +67,7 @@
             android:id="@+id/teamManagerInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Manager"
+            android:hint="@string/team_manager"
             android:inputType="text"
             android:minHeight="48dp"
             android:layout_marginBottom="16dp" />
@@ -82,7 +82,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Cancel"
+                android:text="@string/cancel"
                 android:layout_marginEnd="8dp" />
 
             <Button
@@ -90,7 +90,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Save Team"
+                android:text="@string/save_team"
                 android:layout_marginStart="8dp" />
         </LinearLayout>
     </LinearLayout>

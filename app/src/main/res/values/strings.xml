@@ -1,4 +1,65 @@
 <resources>
-    <string name="app_name">Retrofit Client</string>
+    <!-- App name and main titles -->
+    <string name="app_name">FootBallApiClient</string>
     <string name="call_button_text">Call API</string>
+    <string name="app_title">FootBallApiClient</string>
+    <string name="featured_title">Football Data Explorer</string>
+    <string name="featured_description">Search for players or browse team information using our comprehensive football database.</string>
+    
+    <!-- Search section -->
+    <string name="player_search">Player Search</string>
+    <string name="input_name">Name</string>
+    <string name="input_min_age">Min Age</string>
+    <string name="input_position">Position</string>
+    <string name="search_button">Search Player Data</string>
+    <string name="search_results_header">Player Search Results</string>
+    
+    <!-- Quick actions -->
+    <string name="quick_actions">Quick Actions</string>
+    <string name="view_teams">View Teams</string>
+    <string name="create_team">Create Team</string>
+    <string name="back_to_teams">Back to Teams</string>
+    
+    <!-- Team players -->
+    <string name="team_players">%1$s Players</string>
+    <string name="no_players">No players available for %1$s</string>
+    
+    <!-- Create team form -->
+    <string name="create_new_team">Create New Team</string>
+    <string name="team_name">Team Name</string>
+    <string name="team_league">League</string>
+    <string name="team_country">Country</string>
+    <string name="team_founded_year">Founded Year (1800-2024)</string>
+    <string name="team_stadium">Stadium</string>
+    <string name="team_manager">Manager</string>
+    <string name="cancel">Cancel</string>
+    <string name="save_team">Save Team</string>
+    <string name="team_name_validation">Team name must be at least 2 characters</string>
+    <string name="team_year_validation">Founded year must be between 1800 and 2024</string>
+    <string name="valid_year_validation">Please enter a valid year</string>
+    <string name="team_created">Team created successfully!</string>
+    <string name="team_creation_failed">Failed to create team: %1$s</string>
+    
+    <!-- Create player form -->
+    <string name="add_new_player">Add New Player</string>
+    <string name="player_team_name">Team: %1$s</string>
+    <string name="player_name">Player Name</string>
+    <string name="player_age">Age (16-50)</string>
+    <string name="player_position">Position</string>
+    <string name="player_goals">Goals</string>
+    <string name="player_assists">Assists</string>
+    <string name="player_appearances">Appearances</string>
+    <string name="player_nationality">Nationality</string>
+    <string name="save_player">Save Player</string>
+    <string name="no_team_selected">No team selected</string>
+    <string name="player_name_validation">Player name must be at least 2 characters</string>
+    <string name="player_age_validation">Age must be between 16 and 50</string>
+    <string name="player_number_validation">Please enter valid numbers for age, goals, assists, and appearances</string>
+    <string name="player_added">Player added successfully!</string>
+    <string name="player_add_failed">Failed to add player: %1$s</string>
+    
+    <!-- Error messages -->
+    <string name="search_failed">Search failed: %1$s</string>
+    <string name="error_message">Error: %1$s</string>
+    <string name="team_fetch_failed">Failed to fetch teams: %1$s</string>
 </resources>

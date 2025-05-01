@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/material_dynamic_primary80"
-            app:title="FootBallApiClient"
+            app:title="@string/app_title"
             app:titleTextColor="#FFFFFF" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -51,7 +51,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Football Data Explorer"
+                        android:text="@string/featured_title"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         android:textColor="#1976D2" />
@@ -61,14 +61,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="16dp"
-                        android:text="Search for players or browse team information using our comprehensive football database."
+                        android:text="@string/featured_description"
                         android:textSize="14sp" />
 
                     <!-- Search Section -->
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Player Search"
+                        android:text="@string/player_search"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp" />
@@ -78,7 +78,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:hint="Name">
+                        android:hint="@string/input_name">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/inputName"
@@ -99,7 +99,7 @@
                             android:layout_weight="1"
                             android:layout_marginEnd="4dp"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:hint="Min Age">
+                            android:hint="@string/input_min_age">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/inputMinAge"
@@ -115,7 +115,7 @@
                             android:layout_weight="1"
                             android:layout_marginStart="4dp"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:hint="Position">
+                            android:hint="@string/input_position">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/inputPosition"
@@ -129,7 +129,7 @@
                         android:id="@+id/searchButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Search Player Data"
+                        android:text="@string/search_button"
                         android:textAllCaps="false"
                         app:cornerRadius="8dp"
                         app:icon="@android:drawable/ic_menu_search"
@@ -156,7 +156,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Quick Actions"
+                        android:text="@string/quick_actions"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="16dp" />
@@ -171,7 +171,7 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:text="View Teams"
+                            android:text="@string/view_teams"
                             android:textAllCaps="false"
                             android:layout_marginEnd="8dp"
                             app:cornerRadius="8dp"
@@ -183,7 +183,7 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:text="Create Team"
+                            android:text="@string/create_team"
                             android:textAllCaps="false"
                             android:layout_marginStart="8dp"
                             app:cornerRadius="8dp"
@@ -204,7 +204,7 @@
                     android:id="@+id/backButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Back to Teams"
+                    android:text="@string/back_to_teams"
                     android:textAllCaps="false"
                     app:cornerRadius="8dp"
                     app:icon="@android:drawable/ic_menu_revert"
@@ -227,7 +227,7 @@
                 android:id="@+id/searchResultsHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Player Search Results"
+                android:text="@string/search_results_header"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#1976D2"
