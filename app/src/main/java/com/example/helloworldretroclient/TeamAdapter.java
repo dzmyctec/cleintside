@@ -16,6 +16,7 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.ViewHolder> {
 
     public interface OnPlayerClickListener {
         void onViewPlayersClicked(Team team);
+        void onAddPlayerClicked(Team team);
     }
 
     public void setOnPlayerClickListener(OnPlayerClickListener listener) {
@@ -28,7 +29,7 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView name, league, country, stadium, manager, foundedYear;
-        Button viewPlayersButton;
+        Button viewPlayersButton, addPlayerButton;
 
         public ViewHolder(View view) {
             super(view);
@@ -39,6 +40,7 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.ViewHolder> {
             manager = view.findViewById(R.id.teamManager);
             foundedYear = view.findViewById(R.id.teamFoundedYear);
             viewPlayersButton = view.findViewById(R.id.viewPlayersButton);
+            addPlayerButton = view.findViewById(R.id.addPlayerButton);
         }
     }
 
@@ -59,10 +61,16 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.ViewHolder> {
         holder.manager.setText(team.manager);
         holder.foundedYear.setText(String.valueOf(team.foundedYear));
         
-        // Set button click listener
+        // Set button click listeners
         holder.viewPlayersButton.setOnClickListener(v -> {
             if (playerClickListener != null) {
                 playerClickListener.onViewPlayersClicked(team);
+            }
+        });
+        
+        holder.addPlayerButton.setOnClickListener(v -> {
+            if (playerClickListener != null) {
+                playerClickListener.onAddPlayerClicked(team);
             }
         });
     }

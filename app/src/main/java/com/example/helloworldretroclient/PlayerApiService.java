@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
@@ -32,4 +34,12 @@ public interface PlayerApiService {
     // Endpoint for fetching all teams
     @GET("/api/Teams")
     Call<List<Team>> getTeams();
+    
+    // Endpoint for creating a new team
+    @POST("/api/Teams")
+    Call<Team> createTeam(@Body Team team);
+    
+    // Endpoint for creating a new player
+    @POST("/api/Players")
+    Call<Player> createPlayer(@Body Player player);
 }

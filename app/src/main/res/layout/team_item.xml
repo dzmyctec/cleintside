@@ -150,13 +150,30 @@
                 android:text="Year Value" />
         </LinearLayout>
         
-        <!-- View Players Button -->
-        <Button
-            android:id="@+id/viewPlayersButton"
+        <!-- Buttons Row -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="View Players"
-            android:textAllCaps="false" />
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+            
+            <Button
+                android:id="@+id/viewPlayersButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="View Players"
+                android:textAllCaps="false"
+                android:layout_marginEnd="4dp" />
+                
+            <Button
+                android:id="@+id/addPlayerButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Add Player"
+                android:textAllCaps="false"
+                android:layout_marginStart="4dp" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

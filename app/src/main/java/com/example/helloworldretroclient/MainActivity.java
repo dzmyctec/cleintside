@@ -3,6 +3,7 @@ package com.example.helloworldretroclient;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -12,58 +13,368 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Interceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TeamAdapter.OnPlayerClickListener {
 
+    // UI Elements
     private RecyclerView recyclerView;
     private EditText inputName, inputMinAge, inputPosition;
-    private PlayerApiService apiService;
-    private Button backButton;
+    private Button backButton, createTeamButton;
     private TextView currentTeamName;
+    private View mainLayout, createTeamLayout, createPlayerLayout;
+    
+    // API
+    private PlayerApiService apiService;
+    
+    // State variables
     private boolean isViewingPlayers = false;
+    private boolean isCreatingTeam = false;
+    private boolean isCreatingPlayer = false;
     private List<Team> currentTeams;
+    private Team selectedTeam;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setupViews();
+        setupRetrofit();
+        setupListeners();
+    }
+    
+    private void setupViews() {
+        // Find views in main layout
+        mainLayout = findViewById(R.id.mainLayout);
         inputName = findViewById(R.id.inputName);
         inputMinAge = findViewById(R.id.inputMinAge);
         inputPosition = findViewById(R.id.inputPosition);
         recyclerView = findViewById(R.id.recyclerView);
         backButton = findViewById(R.id.backButton);
         currentTeamName = findViewById(R.id.currentTeamName);
+        createTeamButton = findViewById(R.id.createTeamButton);
         
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        
+        // Initially hide back button and team name
+        backButton.setVisibility(View.GONE);
+        currentTeamName.setVisibility(View.GONE);
+        
+        // Inflate layouts but don't attach to parent yet
+        createTeamLayout = getLayoutInflater().inflate(R.layout.create_team_form, null, false);
+        createPlayerLayout = getLayoutInflater().inflate(R.layout.create_player_form, null, false);
+    }
+    
+    private void setupRetrofit() {
+        // Create OkHttpClient with authentication interceptor
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    Request original = chain.request();
+                    
+                    // Add the API key to the request headers
+                    // Using the primary key from your subscription
+                    Request request = original.newBuilder()
+                            .header("Ocp-Apim-Subscription-Key", "251856aed0a24c91bf1656361e464b69")
+                            .header("Authorization", "Bearer 251856aed0a24c91bf1656361e464b69")
+                            .header("Content-Type", "application/json")
+                            .header("Accept", "application/json")
+                            .method(original.method(), original.body())
+                            .build();
+                    
+                    // Log request for debugging
+                    Log.d("API_REQUEST", "URL: " + request.url());
+                    Log.d("API_REQUEST", "Headers: " + request.headers());
+                            
+                    // Execute the request
+                    okhttp3.Response response = chain.proceed(request);
+                    
+                    // Log the response for debugging
+                    Log.d("API_RESPONSE", "Code: " + response.code());
+                    Log.d("API_RESPONSE", "Message: " + response.message());
+                    
+                    return response;
+                })
+                .build();
 
+        // Create Retrofit instance with the custom OkHttpClient
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://ca2ead.azurewebsites.net")
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .build();
 
         apiService = retrofit.create(PlayerApiService.class);
-
+    }
+    
+    private void setupListeners() {
+        // Main screen buttons
         Button searchButton = findViewById(R.id.searchButton);
         searchButton.setOnClickListener(v -> performSearch());
 
         Button getTeamsButton = findViewById(R.id.getTeamsButton);
         getTeamsButton.setOnClickListener(v -> fetchTeams());
         
+        createTeamButton.setOnClickListener(v -> showCreateTeamForm());
+        
         backButton.setOnClickListener(v -> returnToTeams());
         
-        // Initially hide the back button and team name
-        backButton.setVisibility(View.GONE);
-        currentTeamName.setVisibility(View.GONE);
+        // Create team form buttons
+        Button saveTeamButton = createTeamLayout.findViewById(R.id.saveTeamButton);
+        saveTeamButton.setOnClickListener(v -> saveNewTeam());
+        
+        Button cancelTeamButton = createTeamLayout.findViewById(R.id.cancelTeamButton);
+        cancelTeamButton.setOnClickListener(v -> cancelTeamCreation());
+        
+        // Create player form buttons
+        Button savePlayerButton = createPlayerLayout.findViewById(R.id.savePlayerButton);
+        savePlayerButton.setOnClickListener(v -> saveNewPlayer());
+        
+        Button cancelPlayerButton = createPlayerLayout.findViewById(R.id.cancelPlayerButton);
+        cancelPlayerButton.setOnClickListener(v -> cancelPlayerCreation());
+    }
+    
+    private void showCreateTeamForm() {
+        // Set flag
+        isCreatingTeam = true;
+        
+        // Hide main layout components
+        setMainContentVisibility(View.GONE);
+        
+        // Add create team form to the main view
+        if (createTeamLayout.getParent() != null) {
+            ((ViewGroup) createTeamLayout.getParent()).removeView(createTeamLayout);
+        }
+        ((ViewGroup) findViewById(android.R.id.content)).addView(createTeamLayout);
+    }
+    
+    private void showCreatePlayerForm(Team team) {
+        // Set state
+        isCreatingPlayer = true;
+        selectedTeam = team;
+        
+        // Update team name in the form
+        TextView playerTeamName = createPlayerLayout.findViewById(R.id.playerTeamName);
+        playerTeamName.setText("Team: " + team.name);
+        
+        // Hide main layout components
+        setMainContentVisibility(View.GONE);
+        
+        // Add create player form to the main view
+        if (createPlayerLayout.getParent() != null) {
+            ((ViewGroup) createPlayerLayout.getParent()).removeView(createPlayerLayout);
+        }
+        ((ViewGroup) findViewById(android.R.id.content)).addView(createPlayerLayout);
+    }
+    
+    private void saveNewTeam() {
+        // Get data from form
+        EditText teamNameInput = createTeamLayout.findViewById(R.id.teamNameInput);
+        EditText teamLeagueInput = createTeamLayout.findViewById(R.id.teamLeagueInput);
+        EditText teamCountryInput = createTeamLayout.findViewById(R.id.teamCountryInput);
+        EditText teamFoundedYearInput = createTeamLayout.findViewById(R.id.teamFoundedYearInput);
+        EditText teamStadiumInput = createTeamLayout.findViewById(R.id.teamStadiumInput);
+        EditText teamManagerInput = createTeamLayout.findViewById(R.id.teamManagerInput);
+        
+        // Validate inputs
+        String name = teamNameInput.getText().toString().trim();
+        String league = teamLeagueInput.getText().toString().trim();
+        String country = teamCountryInput.getText().toString().trim();
+        String stadiumName = teamStadiumInput.getText().toString().trim();
+        String manager = teamManagerInput.getText().toString().trim();
+        
+        if (name.isEmpty() || name.length() < 2) {
+            Toast.makeText(this, "Team name must be at least 2 characters", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        int foundedYear;
+        try {
+            foundedYear = Integer.parseInt(teamFoundedYearInput.getText().toString().trim());
+            if (foundedYear < 1800 || foundedYear > 2024) {
+                Toast.makeText(this, "Founded year must be between 1800 and 2024", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Please enter a valid year", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        // Create team object
+        Team newTeam = new Team();
+        newTeam.name = name;
+        newTeam.league = league;
+        newTeam.country = country;
+        newTeam.foundedYear = foundedYear;
+        newTeam.stadium = stadiumName;
+        newTeam.manager = manager;
+        newTeam.players = new ArrayList<>();
+        
+        // Call API to create team
+        apiService.createTeam(newTeam).enqueue(new Callback<Team>() {
+            @Override
+            public void onResponse(Call<Team> call, Response<Team> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(MainActivity.this, "Team created successfully!", Toast.LENGTH_SHORT).show();
+                    
+                    // Hide form and show main layout
+                    cancelTeamCreation();
+                    
+                    // Refresh team list
+                    fetchTeams();
+                } else {
+                    Toast.makeText(MainActivity.this, "Failed to create team: " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Team> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    
+    private void cancelTeamCreation() {
+        // Remove form from view
+        ((ViewGroup) findViewById(android.R.id.content)).removeView(createTeamLayout);
+        
+        // Show main layout again
+        setMainContentVisibility(View.VISIBLE);
+        
+        // Reset state
+        isCreatingTeam = false;
+    }
+    
+    private void saveNewPlayer() {
+        if (selectedTeam == null) {
+            Toast.makeText(this, "No team selected", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        // Get data from form
+        EditText playerNameInput = createPlayerLayout.findViewById(R.id.playerNameInput);
+        EditText playerAgeInput = createPlayerLayout.findViewById(R.id.playerAgeInput);
+        EditText playerPositionInput = createPlayerLayout.findViewById(R.id.playerPositionInput);
+        EditText playerGoalsInput = createPlayerLayout.findViewById(R.id.playerGoalsInput);
+        EditText playerAssistsInput = createPlayerLayout.findViewById(R.id.playerAssistsInput);
+        EditText playerAppearancesInput = createPlayerLayout.findViewById(R.id.playerAppearancesInput);
+        EditText playerNationalityInput = createPlayerLayout.findViewById(R.id.playerNationalityInput);
+        
+        // Validate inputs
+        String name = playerNameInput.getText().toString().trim();
+        String position = playerPositionInput.getText().toString().trim();
+        String nationality = playerNationalityInput.getText().toString().trim();
+        
+        if (name.isEmpty() || name.length() < 2) {
+            Toast.makeText(this, "Player name must be at least 2 characters", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        // Parse numeric inputs
+        int age, goals, assists, appearances;
+        try {
+            age = Integer.parseInt(playerAgeInput.getText().toString().trim());
+            if (age < 16 || age > 50) {
+                Toast.makeText(this, "Age must be between 16 and 50", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
+            goals = playerGoalsInput.getText().toString().isEmpty() ? 0 : 
+                Integer.parseInt(playerGoalsInput.getText().toString().trim());
+            assists = playerAssistsInput.getText().toString().isEmpty() ? 0 : 
+                Integer.parseInt(playerAssistsInput.getText().toString().trim());
+            appearances = playerAppearancesInput.getText().toString().isEmpty() ? 0 : 
+                Integer.parseInt(playerAppearancesInput.getText().toString().trim());
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Please enter valid numbers for age, goals, assists, and appearances", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        // Create player object
+        Player newPlayer = new Player();
+        newPlayer.name = name;
+        newPlayer.age = age;
+        newPlayer.position = position;
+        newPlayer.goals = goals;
+        newPlayer.assists = assists;
+        newPlayer.appearances = appearances;
+        newPlayer.nationality = nationality;
+        newPlayer.teamId = selectedTeam.teamId;
+        
+        // Call API to create player
+        apiService.createPlayer(newPlayer).enqueue(new Callback<Player>() {
+            @Override
+            public void onResponse(Call<Player> call, Response<Player> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(MainActivity.this, "Player added successfully!", Toast.LENGTH_SHORT).show();
+                    
+                    // Hide form and show player list
+                    cancelPlayerCreation();
+                    
+                    // Refresh to show updated player list
+                    fetchTeams();
+                    
+                    // Navigate back to the team players view
+                    for (Team team : currentTeams) {
+                        if (team.teamId == selectedTeam.teamId) {
+                            displayTeamPlayers(team);
+                            break;
+                        }
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "Failed to add player: " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Player> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    
+    private void cancelPlayerCreation() {
+        // Remove form from view
+        ((ViewGroup) findViewById(android.R.id.content)).removeView(createPlayerLayout);
+        
+        // Show main layout again
+        setMainContentVisibility(View.VISIBLE);
+        
+        // Reset state
+        isCreatingPlayer = false;
+        
+        // Navigate back to the team view if needed
+        if (isViewingPlayers && selectedTeam != null) {
+            displayTeamPlayers(selectedTeam);
+        }
+    }
+    
+    private void setMainContentVisibility(int visibility) {
+        findViewById(R.id.inputName).setVisibility(visibility);
+        findViewById(R.id.inputMinAge).setVisibility(visibility);
+        findViewById(R.id.inputPosition).setVisibility(visibility);
+        findViewById(R.id.searchButton).setVisibility(visibility);
+        findViewById(R.id.getTeamsButton).setVisibility(visibility);
+        findViewById(R.id.createTeamButton).setVisibility(visibility);
+        
+        if (isViewingPlayers) {
+            backButton.setVisibility(visibility);
+            currentTeamName.setVisibility(visibility);
+        }
+        
+        recyclerView.setVisibility(visibility);
     }
     
     private void returnToTeams() {
@@ -84,10 +395,24 @@ public class MainActivity extends AppCompatActivity {
             inputPosition.setVisibility(View.VISIBLE);
             findViewById(R.id.searchButton).setVisibility(View.VISIBLE);
             findViewById(R.id.getTeamsButton).setVisibility(View.VISIBLE);
+            findViewById(R.id.createTeamButton).setVisibility(View.VISIBLE);
         }
     }
 
+    @Override
+    public void onViewPlayersClicked(Team team) {
+        displayTeamPlayers(team);
+    }
+    
+    @Override
+    public void onAddPlayerClicked(Team team) {
+        selectedTeam = team;
+        showCreatePlayerForm(team);
+    }
+
     private void displayTeamPlayers(Team team) {
+        selectedTeam = team;
+        
         if (team.players != null && !team.players.isEmpty()) {
             recyclerView.setAdapter(new PlayerAdapter(team.players));
             
@@ -103,6 +428,7 @@ public class MainActivity extends AppCompatActivity {
             inputPosition.setVisibility(View.GONE);
             findViewById(R.id.searchButton).setVisibility(View.GONE);
             findViewById(R.id.getTeamsButton).setVisibility(View.GONE);
+            findViewById(R.id.createTeamButton).setVisibility(View.GONE);
         } else {
             // Show a message that team has no players
             Toast.makeText(this, 
@@ -163,12 +489,16 @@ public class MainActivity extends AppCompatActivity {
     }
     
     private void setupTeamAdapter(TeamAdapter adapter) {
-        adapter.setOnPlayerClickListener(team -> displayTeamPlayers(team));
+        adapter.setOnPlayerClickListener(this);
     }
     
     @Override
     public void onBackPressed() {
-        if (isViewingPlayers) {
+        if (isCreatingTeam) {
+            cancelTeamCreation();
+        } else if (isCreatingPlayer) {
+            cancelPlayerCreation();
+        } else if (isViewingPlayers) {
             returnToTeams();
         } else {
             super.onBackPressed();
